@@ -27,8 +27,8 @@
     <artifactId>miyamoto</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Java Proxy Annotation</name>
-    <description>A simple Java Proxy Annotation</description>
+    <name>A lightweight yet powerful Java5 Annotations Proxy</name>
+    <description>Miyamoto (in honor of Miyamoto Musashi, the Go Rin no Sho book author) is lightweight yet powerful Java5 Annotations Proxy</description>
     <url>http://www.99soft.org/projects/miyamoto/${project.version}</url>
 
     <organization>
@@ -45,14 +45,14 @@
     </licenses>
 
     <scm>
-        <developerConnection>scm:svn:https://meiyo.googlecode.com/svn/trunk</developerConnection>
-        <connection>scm:svn:http://meiyo.googlecode.com/svn/trunk</connection>
-        <url>http://code.google.com/p/meiyo/source/browse/trunk</url>
+        <developerConnection>scm:svn:https://miyamoto.googlecode.com/svn/trunk</developerConnection>
+        <connection>scm:svn:http://miyamoto.googlecode.com/svn/trunk</connection>
+        <url>http://code.google.com/p/miyamoto/source/browse/trunk</url>
     </scm>
 
     <issueManagement>
         <system>Google-Code Issue Management</system>
-        <url>http://code.google.com/p/meiyo/issues/</url>
+        <url>http://code.google.com/p/miyamoto/issues/</url>
     </issueManagement>
 
     <distributionManagement>
