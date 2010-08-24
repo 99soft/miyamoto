@@ -27,8 +27,8 @@
     <artifactId>miyamoto</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>A lightweight yet powerful Java5 Annotations Proxy</name>
-    <description>Miyamoto (in honor of Miyamoto Musashi, the Go Rin no Sho book author) is lightweight yet powerful Java5 Annotations Proxy</description>
+    <name>A lightweight yet powerful reusable Java5 Annotations Proxy</name>
+    <description>Miyamoto (in honor of Miyamoto Musashi, the Go Rin no Sho book author) is lightweight yet powerful reusable Java5 Annotations Proxy</description>
     <url>http://www.99soft.org/projects/miyamoto/${project.version}</url>
 
     <organization>
