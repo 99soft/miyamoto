@@ -1,0 +1,83 @@
+                                    ------
+                                    Introduction
+                                    ------
+                                    The Miyamoto Team
+                                    ------
+                                     2010
+
+~~
+~~   Copyright 2010 The Miyamoto Team
+~~
+~~   Licensed under the Apache License, Version 2.0 (the "License");
+~~   you may not use this file except in compliance with the License.
+~~   You may obtain a copy of the License at
+~~
+~~       http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~   Unless required by applicable law or agreed to in writing, software
+~~   distributed under the License is distributed on an "AS IS" BASIS,
+~~   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~   See the License for the specific language governing permissions and
+~~   limitations under the License.
+~~
+
+~~version: $Id$
+
+Introduction
+
+  Miyamoto (in honor of <Miyamoto Musashi>, the <Go Rin no Sho> book author) is
+  lightweight yet powerful Java5 Annotations Proxy
+
+  To use it, just add the following <<<dependency>>> to your <<<pom.xml>>>:
+
++--------------------------------------+
+<dependencies>
+    ...
+    <dependency>
+        <groupId>com.googlecode.miyamoto</groupId>
+        <artifactId>miyamoto</artifactId>
+        <version>XX.XX</version>
+    </dependency>
+    ...
+</dependencies>
++--------------------------------------+
+
+  Now users are ready to use the Annotation Proxy; let's assume users wants to
+  proxy the following annotation:
+
++--------------------------------------+
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE })
+public @interface TestAnnotation {
+
+    String string() default "supercalifragilistichespiralidoso";
+
+    int[] integer();
+
+}
+
++--------------------------------------+
+
+  all they have to do is just instantiating the proxy, sets the properties,
+  and get the proxed annotation:
+
++--------------------------------------+
+import com.googlecode.miyamoto.AnnotationProxy;
+...
+AnnotationProxyBuilder<TestAnnotation> proxy = AnnotationProxyBuilder.(TestAnnotation.class);
+proxy.setProperty("integer", new int[] { 4 });
+
+TestAnnotation proxed = proxy.getProxedAnnotation();
++--------------------------------------+
+
+  Users can still modify the annotation values:
+
++--------------------------------------+
+proxy.setProperty("integer", new int[] { 4, 5, 6 });
+...
+proxed.integer() // { 4, 5, 6 }
++--------------------------------------+
+
+  If <<<TestAnnotation>>> has to be proxed more than once, a new <<<AnnotationProxyBuilder>>>
+  has to be instantiated.
