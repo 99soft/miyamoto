@@ -18,35 +18,70 @@ package com.googlecode.miyamoto;
 import java.util.Arrays;
 
 /**
- * 
+ * Describes an annotation property.
  *
  * @version $Id$
  */
 final class AnnotationProperty {
 
+    /**
+     * The property name.
+     */
     private final String name;
 
+    /**
+     * The property type.
+     */
     private final Class<?> type;
 
+    /**
+     * The property value. This field can be mutable.
+     */
     private Object value;
 
-    protected AnnotationProperty(String name, Class<?> type) {
+    /**
+     * Creates a new annotation property instance.
+     *
+     * @param name the property name.
+     * @param type the property type.
+     */
+    public AnnotationProperty(String name, Class<?> type) {
         this.name = name;
         this.type = type;
     }
 
+    /**
+     * Returns the property name.
+     *
+     * @return the property name.
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Returns the property type.
+     *
+     * @return the property type.
+     */
     public Class<?> getType() {
         return this.type;
     }
 
+    /**
+     * Returns the property value.
+     *
+     * @return the property value.
+     */
     public Object getValue() {
         return this.value;
     }
 
+    /**
+     * Sets the property value.
+     *
+     * @param value the property value.
+     */
     public void setValue(Object value) {
         if (value != null && !(this.type.isAssignableFrom(value.getClass())
                 || (this.type == Boolean.TYPE && value.getClass() == Boolean.class)
@@ -68,6 +103,9 @@ final class AnnotationProperty {
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -78,6 +116,11 @@ final class AnnotationProperty {
         return result;
     }
 
+    /**
+     * Calculates this annotation value hash code.
+     *
+     * @return this annotation value hash code.
+     */
     protected int getValueHashCode() {
         if (this.value == null) {
             return 0;
@@ -114,6 +157,9 @@ final class AnnotationProperty {
         return Arrays.hashCode((Object[]) this.value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -205,6 +251,11 @@ final class AnnotationProperty {
                 + ")";
     }
 
+    /**
+     * Calculates the {@code toString} of the property value.
+     *
+     * @return the {@code toString} of the property value.
+     */
     protected String valueToString() {
         if (!this.type.isArray()) {
             return String.valueOf(this.value);
