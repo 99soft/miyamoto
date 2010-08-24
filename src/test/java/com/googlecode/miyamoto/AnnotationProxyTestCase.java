@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 @TestAnnotation(string="supercalifragilistichespiralidoso", integer=4)
 public final class AnnotationProxyTestCase {
 
-    private AnnotationProxy<TestAnnotation> proxy;
+    private AnnotationProxyBuilder<TestAnnotation> proxy;
 
     private TestAnnotation current;
 
@@ -36,7 +36,7 @@ public final class AnnotationProxyTestCase {
 
     @BeforeSuite
     public void setUp() {
-        this.proxy = AnnotationProxy.newProxy(TestAnnotation.class);
+        this.proxy = AnnotationProxyBuilder.newBuilder(TestAnnotation.class);
         this.proxy.setProperty("integer", new int[] { 4 });
 
         this.current = proxy.getProxedAnnotation();

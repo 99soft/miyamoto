@@ -33,7 +33,7 @@ import java.util.Map.Entry;
  * @param <A> The annotation type has to be proxed.
  * @version $Id$
  */
-public final class AnnotationProxy<A extends Annotation> implements Annotation, InvocationHandler {
+public final class AnnotationProxyBuilder<A extends Annotation> implements Annotation, InvocationHandler {
 
     /**
      * The multiplicator required in the hash code calculation.
@@ -47,11 +47,11 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
      * @param annotationType the annotation type class has to be proxed.
      * @return a new annotation proxy.
      */
-    public static <A extends Annotation> AnnotationProxy<A> newProxy(Class<A> annotationType) {
+    public static <A extends Annotation> AnnotationProxyBuilder<A> newBuilder(Class<A> annotationType) {
         if (annotationType == null) {
             throw new IllegalArgumentException("Parameter 'annotationType' must be not null");
         }
-        return new AnnotationProxy<A>(annotationType);
+        return new AnnotationProxyBuilder<A>(annotationType);
     }
 
     /**
@@ -60,11 +60,11 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
      * @param obj the annotation.
      * @return the annotation proxy, if any, given the annotation.
      */
-    private static AnnotationProxy<?> getAnnotationProxy(Object obj) {
+    private static AnnotationProxyBuilder<?> getAnnotationProxy(Object obj) {
         if (Proxy.isProxyClass(obj.getClass())) {
             InvocationHandler handler = Proxy.getInvocationHandler(obj);
-            if (handler instanceof AnnotationProxy) {
-                return (AnnotationProxy<?>) handler;
+            if (handler instanceof AnnotationProxyBuilder) {
+                return (AnnotationProxyBuilder<?>) handler;
             }
         }
         return null;
@@ -108,7 +108,7 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
      *
      * @param annotationType the annotation type class has to be proxed.
      */
-    private AnnotationProxy(Class<A> annotationType) {
+    private AnnotationProxyBuilder(Class<A> annotationType) {
         this.annotationType = annotationType;
 
         String propertyName;
@@ -223,7 +223,7 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
             expected = this.properties.get(propertyName);
             AnnotationProperty actual = new AnnotationProperty(propertyName, method.getReturnType());
 
-            AnnotationProxy<?> proxy = getAnnotationProxy(obj);
+            AnnotationProxyBuilder<?> proxy = getAnnotationProxy(obj);
             if (proxy != null) {
                 actual.setValue(proxy.getProperty(propertyName));
             } else {
