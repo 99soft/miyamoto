@@ -23,7 +23,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,13 +30,23 @@ import java.util.Map.Entry;
 /**
  * 
  *
- * @param <A> The annotation has to be proxed.
+ * @param <A> The annotation type has to be proxed.
  * @version $Id$
  */
 public final class AnnotationProxy<A extends Annotation> implements Annotation, InvocationHandler {
 
+    /**
+     * The multiplicator required in the hash code calculation.
+     */
     private static final int MEMBER_NAME_MULTIPLICATOR = 127;
 
+    /**
+     * Creates a new annotation proxy.
+     *
+     * @param <A> the annotation type has to be proxed.
+     * @param annotationType the annotation type class has to be proxed.
+     * @return a new annotation proxy.
+     */
     public static <A extends Annotation> AnnotationProxy<A> newProxy(Class<A> annotationType) {
         if (annotationType == null) {
             throw new IllegalArgumentException("Parameter 'annotationType' must be not null");
@@ -45,17 +54,29 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
         return new AnnotationProxy<A>(annotationType);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A extends Annotation> AnnotationProxy<A> getAnnotationHandler(Object obj) {
+    /**
+     * Retrieves the annotation proxy, if any, given the annotation.
+     *
+     * @param obj the annotation.
+     * @return the annotation proxy, if any, given the annotation.
+     */
+    private static AnnotationProxy<?> getAnnotationProxy(Object obj) {
         if (Proxy.isProxyClass(obj.getClass())) {
             InvocationHandler handler = Proxy.getInvocationHandler(obj);
             if (handler instanceof AnnotationProxy) {
-                return (AnnotationProxy<A>) handler;
+                return (AnnotationProxy<?>) handler;
             }
         }
         return null;
     }
 
+    /**
+     * Access to the declared methods of an annotation, given the type.
+     *
+     * @param <A> the annotation type.
+     * @param annotationType the annotation type class.
+     * @return the declared methods of an annotation, given the type.
+     */
     private static <A extends Annotation> Method[] getDeclaredMethods(final Class<A> annotationType) {
         return AccessController.doPrivileged(
                 new PrivilegedAction<Method[]>() {
@@ -67,12 +88,26 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
                 });
     }
 
+    /**
+     * The annotation type class has to be proxed.
+     */
     private final Class<A> annotationType;
 
+    /**
+     * The annotation properties registry.
+     */
     private final Map<String, AnnotationProperty> properties = new LinkedHashMap<String, AnnotationProperty>();
 
+    /**
+     * The proxed annotation.
+     */
     private final A proxedAnnotation;
 
+    /**
+     * Build a new proxy annotation given the annotation type.
+     *
+     * @param annotationType the annotation type class has to be proxed.
+     */
     private AnnotationProxy(Class<A> annotationType) {
         this.annotationType = annotationType;
 
@@ -94,6 +129,12 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
                 this));
     }
 
+    /**
+     * Set a property value.
+     *
+     * @param name the property name.
+     * @param value the property value.
+     */
     public void setProperty(String name, Object value) {
         if (name == null) {
             throw new IllegalArgumentException("Parameter 'name' must be not null");
@@ -113,6 +154,12 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
         this.properties.get(name).setValue(value);
     }
 
+    /**
+     * Returns the property value, given the name, if present.
+     *
+     * @param name the property name.
+     * @return the property value, given the name, if present.
+     */
     public Object getProperty(String name) {
         if (name == null) {
             throw new IllegalArgumentException("Parameter 'name' must be not null");
@@ -120,6 +167,9 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
         return this.properties.get(name).getValue();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String name = method.getName();
         if (this.properties.containsKey(name)) {
@@ -128,18 +178,20 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
         return method.invoke(this, args);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Class<? extends Annotation> annotationType() {
         return this.annotationType;
     }
 
+    /**
+     * Returns the proxed annotation.
+     *
+     * @return the proxed annotation.
+     */
     public A getProxedAnnotation() {
         return this.proxedAnnotation;
-    }
-
-    public AnnotationProperty[] describe() {
-        Collection<AnnotationProperty> props = this.properties.values();
-        AnnotationProperty[] properties = new AnnotationProperty[props.size()];
-        return props.toArray(properties);
     }
 
     /**
@@ -171,7 +223,7 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
             expected = this.properties.get(propertyName);
             AnnotationProperty actual = new AnnotationProperty(propertyName, method.getReturnType());
 
-            AnnotationProxy<?> proxy = getAnnotationHandler(obj);
+            AnnotationProxy<?> proxy = getAnnotationProxy(obj);
             if (proxy != null) {
                 actual.setValue(proxy.getProperty(propertyName));
             } else {
