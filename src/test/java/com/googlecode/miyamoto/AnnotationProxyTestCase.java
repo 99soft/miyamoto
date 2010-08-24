@@ -43,36 +43,64 @@ public final class AnnotationProxyTestCase {
         this.expected = AnnotationProxyTestCase.class.getAnnotation(TestAnnotation.class);
     }
 
-    @Test(expectedExceptions = { IllegalArgumentException.class })
+    @Test(
+            expectedExceptions = { IllegalArgumentException.class },
+            groups = { "init" }
+    )
     public void illegalSetProperty() {
         this.proxy.setProperty("integer", false);
     }
 
-    @Test(expectedExceptions = { IllegalArgumentException.class })
+    @Test(
+            expectedExceptions = { IllegalArgumentException.class },
+            groups = { "init" }
+    )
     public void missingSetProperty() {
         this.proxy.setProperty("doesnotexist", false);
     }
 
-    @Test
+    @Test(
+            groups = { "core" },
+            dependsOnGroups = { "init" }
+    )
     public void verifySetProperty() {
         assert Arrays.equals(this.expected.integer(), this.current.integer());
     }
 
-    @Test
+    @Test(
+            groups = { "core" },
+            dependsOnGroups = { "init" }
+    )
     public void verifyEquals() {
         assert this.current.equals(this.current);
-        // assert this.current.equals(this.expected);
+        assert this.current.equals(this.expected);
         assert this.expected.equals(this.current);
     }
 
-    @Test
+    @Test(
+            groups = { "core" },
+            dependsOnGroups = { "init" }
+    )
     public void verifyHashCode() {
         assert this.expected.hashCode() == this.current.hashCode();
     }
 
-    @Test
+    @Test(
+            groups = { "core" },
+            dependsOnGroups = { "init" }
+    )
     public void verifyToString() {
         assert this.expected.toString().equals(this.current.toString());
+    }
+
+    @Test(
+            dependsOnGroups = { "core" }
+    )
+    public void setPropertyOnBuilderAndVerifyTheProxed() {
+        final int[] expectedValue = new int[] { 4, 5, 6 };
+
+        this.proxy.setProperty("integer", expectedValue);
+        assert Arrays.equals(expectedValue, this.current.integer());
     }
 
 }
