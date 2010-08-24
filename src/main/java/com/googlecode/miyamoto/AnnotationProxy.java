@@ -173,7 +173,7 @@ public final class AnnotationProxy<A extends Annotation> implements Annotation, 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String name = method.getName();
         if (this.properties.containsKey(name)) {
-            return this.properties.get(name).getValue();
+            return this.getProperty(name);
         }
         return method.invoke(this, args);
     }
