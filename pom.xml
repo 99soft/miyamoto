@@ -345,7 +345,6 @@
                 <targetPath>META-INF</targetPath>
                 <includes>
                     <include>LICENSE</include>
-                    <include>doap.rdf</include>
                 </includes>
           </resource>
         </resources>
